@@ -27,6 +27,18 @@ class TransformersClassifierHandler(BaseHandler, ABC):
 
         self._batch_size = 0
         self.initialized = False
+    def preprocess(self, data: dict):
+        """
+        Very basic preprocessing code that splits the data into list for text id's and  list for texts.
+        :param data:Dict with text
+        :return:list for text id's and  list for texts
+        """
+        logger.info(f"Received data: {data}")
+        data = data[0]["body"]["texts"]
+        sentences = [d["text"] for d in data]
+        ids = [d["text_id"] for d in data]
+        return ids, sentences
+
 
     def initialize(self, ctx):
         self.manifest = ctx.manifest
