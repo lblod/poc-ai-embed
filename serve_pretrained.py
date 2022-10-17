@@ -51,6 +51,7 @@ class TransformersClassifierHandler(BaseHandler, ABC):
 
         # Read model serialize/pt file
         self.model = RobertaModel.from_pretrained(model_name)
+        self.model.eval()
         self.tokenizer = RobertaTokenizer.from_pretrained(model_name)
 
         self.initialized = True
