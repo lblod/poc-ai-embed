@@ -7,6 +7,16 @@ from torch import nn
 from transformers import RobertaModel, RobertaTokenizer
 from ts.torch_handler.base_handler import BaseHandler
 
+seed = 1
+import random
+import numpy as np
+
+random.seed(seed)
+np.random.seed(seed)
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+
 logger = logging.getLogger(__name__)
 
 
