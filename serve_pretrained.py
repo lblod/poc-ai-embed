@@ -4,7 +4,7 @@ from abc import ABC
 
 import torch
 from torch import nn
-from transformers import AutoModel, AutoTokenizer
+from transformers import RobertaModel, RobertaTokenizer
 from ts.torch_handler.base_handler import BaseHandler
 
 logger = logging.getLogger(__name__)
@@ -50,8 +50,8 @@ class TransformersClassifierHandler(BaseHandler, ABC):
         model_name = "/models/RobertaModel_PDF_V1"
 
         # Read model serialize/pt file
-        self.model = AutoModel.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = RobertaModel.from_pretrained(model_name)
+        self.tokenizer = RobertaTokenizer.from_pretrained(model_name)
 
         self.initialized = True
 
@@ -109,12 +109,13 @@ class TransformersClassifierHandler(BaseHandler, ABC):
         texts = [" ".join(text.split()) for text in inputs]
 
         # I am aware that this is not actually fully batched, but that's not really relevant here.
-        pooled_embeddings = []
-        for text in texts:
-            # Tokenize data
-            result = reprocess_encodings(self.tokenizer.encode_plus(text, None, add_special_tokens=False)["input_ids"])
-            # Embed that and add to list
-            pooled_embeddings.append(self.model(**result)["pooler_output"])
+        with torch.no_grad():
+            pooled_embeddings = []
+            for text in texts:
+                # Tokenize data
+                result = reprocess_encodings(self.tokenizer.encode_plus(text, None, add_special_tokens=False)["input_ids"])
+                # Embed that and add to list
+                pooled_embeddings.append(self.model(**result)["pooler_output"])
 
         return pooled_embeddings
 
