@@ -27,6 +27,7 @@ class TransformersClassifierHandler(BaseHandler, ABC):
 
         self._batch_size = 0
         self.initialized = False
+
     def preprocess(self, data: dict):
         """
         Very basic preprocessing code that splits the data into list for text id's and  list for texts.
@@ -38,7 +39,6 @@ class TransformersClassifierHandler(BaseHandler, ABC):
         sentences = [d["text"] for d in data]
         ids = [d["text_id"] for d in data]
         return ids, sentences
-
 
     def initialize(self, ctx):
         self.manifest = ctx.manifest
@@ -114,7 +114,8 @@ class TransformersClassifierHandler(BaseHandler, ABC):
             pooled_embeddings = []
             for text in texts:
                 # Tokenize data
-                result = reprocess_encodings(self.tokenizer.encode_plus(text, None, add_special_tokens=False)["input_ids"])
+                result = reprocess_encodings(
+                    self.tokenizer.encode_plus(text, None, add_special_tokens=False)["input_ids"])
                 # Embed that and add to list
                 pooled_embeddings.append(self.model(**result)["pooler_output"])
 
