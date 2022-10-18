@@ -1,4 +1,7 @@
 # poc-ai-embed
+
+![](https://build.redpencil.io/api/badges/lblod/poc-ai-embed/status.svg)
+
 This service is a pytorch serve api.
 
 ## Getting started
